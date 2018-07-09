@@ -1,4 +1,4 @@
-#insta-book
+# config.json
 
 ```
 {
