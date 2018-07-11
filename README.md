@@ -6,7 +6,8 @@
     "uri": "mongodb://HOST"
   },
   "server": {
-    "secret": "YOUR_SECRET"
+    "secret": "YOUR_SECRET",
+    "port": "PORT"
   },
   "instagram": {
     "login": "LOGIN",
