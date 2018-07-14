@@ -30,7 +30,7 @@ webpackEmptyAsyncContext.id = "./src/$$_lazy_route_resource lazy recursive";
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"menu-posts\">\n    <div class=\"amountSelect\">\n        Выбранно: {{this.arrSendPost.length}}\n    </div>\n    <div class=\"resetSelect\" (click)=\"resetSelectPost()\">\n        Сбросить выбранные посты\n    </div>\n\n    <div class=\"postSelect\" (click)=\"sendSelectPost()\">\n        Отправить в блог бук\n    </div>\n    <input class=\"enterNickName\" [(ngModel)]=\"valueNick\" value=\"\" placeholder=\"введите никнейм\" type=\"text\">\n    <div class=\"resetSelect searchName\" (click)=\"valueNickchange()\">\n        посмотреть этот профиль\n    </div>\n</div>\n<div class=\"content\">\n    <div class=\"post\" *ngFor=\"let item of arrPost let i = index\" (click)=\"selectPost(i)\" [ngClass]=\"{active: this.arrPostActive[i] === true}\">\n        <div class=\"img-wrapper\">\n            <img class=\"img-post\" [src]=\"item.imageUrl\">\n        </div>\n        <div class=\"like\">\n            <img class=\"icon-like\" src=\"./../assets/image/like-ico.png\" alt=\"\">\n            {{item.likeCount}}\n        </div>\n        <div class=\"description\">\n           {{item.caption}}\n        </div>\n    </div>\n</div>\n\n\n"
+module.exports = "<div class=\"menu-posts\">\n    <!--<div class=\"amountSelect\">-->\n    <!--Выбранно: {{this.arrSendPost.length}}-->\n    <!--</div>-->\n    <!--<div class=\"resetSelect\" (click)=\"resetSelectPost()\">-->\n    <!--Сбросить выбранные посты-->\n    <!--</div>-->\n\n    <!--<div class=\"postSelect\" (click)=\"sendSelectPost()\">-->\n    <!--Отправить в блог бук-->\n    <!--</div>-->\n    <input class=\"enterNickName\" [(ngModel)]=\"valueNick\" value=\"\" placeholder=\"Введите никнейм\" type=\"text\">\n    <div class=\"resetSelect searchName\" (click)=\"valueNickchange()\">\n        отправить посты этого профиля на почту\n    </div>\n</div>\n<!--<div class=\"content\">-->\n<!--<div class=\"post\" *ngFor=\"let item of arrPost let i = index\" (click)=\"selectPost(i)\" [ngClass]=\"{active: this.arrPostActive[i] === true}\">-->\n<!--<div class=\"img-wrapper\">-->\n<!--<img class=\"img-post\" [src]=\"item.imageUrl\">-->\n<!--</div>-->\n<!--<div class=\"like\">-->\n<!--<img class=\"icon-like\" src=\"./../assets/image/like-ico.png\" alt=\"\">-->\n<!--{{item.likeCount}}-->\n<!--</div>-->\n<!--<div class=\"description\">-->\n<!--{{item.caption}}-->\n<!--</div>-->\n<!--</div>-->\n<!--</div>-->"
 
 /***/ }),
 
@@ -171,19 +171,15 @@ var AppComponent = /** @class */ (function () {
         return __awaiter(this, void 0, void 0, function () {
             var getPost;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        this.resetSelectPost();
-                        if (!(this.valueNick !== '')) return [3 /*break*/, 2];
-                        return [4 /*yield*/, this.api.get('photos?username=' + this.valueNick)];
-                    case 1:
-                        getPost = _a.sent();
-                        console.log(getPost);
-                        this.arrPost = getPost.data;
-                        this.arrPostActive.length = this.arrPost.length;
-                        _a.label = 2;
-                    case 2: return [2 /*return*/];
+                this.resetSelectPost();
+                if (this.valueNick !== '') {
+                    getPost = this.api.get('photos?username=' + this.valueNick);
+                    alert('Посты в обработке, после будут отправлены к вам на почту, ожидайте');
                 }
+                else {
+                    alert('Введите ник');
+                }
+                return [2 /*return*/];
             });
         });
     };
@@ -341,20 +337,24 @@ var HttpApiService = /** @class */ (function () {
         this.http = http;
     }
     HttpApiService_1 = HttpApiService;
-    HttpApiService.prototype.get = function (resource, params, headers) {
+    HttpApiService.prototype.get = function (resource, params) {
         return __awaiter(this, void 0, void 0, function () {
-            var request_address;
+            var headers, request_address;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        request_address =
-                            params ?
-                                params.id ?
-                                    HttpApiService_1.API_ADDRESS + "/" + resource + "/" + params['id'] :
-                                    HttpApiService_1.API_ADDRESS + "/" + resource + "?" + Object(_shared_functions_object_to_urlparams__WEBPACK_IMPORTED_MODULE_2__["object_to_url"])(params) :
-                                HttpApiService_1.API_ADDRESS + "/" + resource;
+                        headers = new _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpHeaders"]({
+                            'Content-Type': 'application/json',
+                            'Access-Control-Allow-Origin': '*',
+                            Accept: 'application/json'
+                        });
+                        request_address = params
+                            ? params.id
+                                ? HttpApiService_1.API_ADDRESS + "/" + resource + "/" + params['id']
+                                : HttpApiService_1.API_ADDRESS + "/" + resource + "?" + Object(_shared_functions_object_to_urlparams__WEBPACK_IMPORTED_MODULE_2__["object_to_url"])(params)
+                            : HttpApiService_1.API_ADDRESS + "/" + resource;
                         return [4 /*yield*/, this.http.get(request_address, { headers: headers }).toPromise()];
-                    case 1: return [2 /*return*/, (_a.sent())];
+                    case 1: return [2 /*return*/, _a.sent()];
                 }
             });
         });
@@ -376,7 +376,7 @@ var HttpApiService = /** @class */ (function () {
             });
         });
     };
-    HttpApiService.API_ADDRESS = 'http://localhost:8080/api';
+    HttpApiService.API_ADDRESS = 'http://185.195.26.110:8080/api';
     HttpApiService = HttpApiService_1 = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
         __metadata("design:paramtypes", [_angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
@@ -459,10 +459,9 @@ var sendSelectPostService = /** @class */ (function () {
                     case 0: return [4 /*yield*/, this.api.post('createArchive', data)];
                     case 1:
                         fields_response = _a.sent();
-                        console.log(fields_response);
                         if (fields_response.success == true) {
                             a = document.createElement('a');
-                            a.href = 'http://localhost:8080/example.zip';
+                            a.href = 'http://185.195.26.110:8080/example.zip';
                             document.body.appendChild(a);
                             a.click();
                         }
